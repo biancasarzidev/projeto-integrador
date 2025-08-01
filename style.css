@@ -95,6 +95,11 @@ body {
   min-height: 100px;
 }
 
+/* Correção de altura para o campo de data/hora */
+input[type="datetime-local"] {
+  height: 48px;
+}
+
 /* ==========================
    Foco nos campos
 ========================== */
