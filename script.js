@@ -1,13 +1,13 @@
 // 🔐 Login simples
 const senhaCorreta = "uningati2025";
 
-window.onload = () => {
+document.addEventListener("DOMContentLoaded", () => {
   if (localStorage.getItem("logado") === "true") {
     mostrarSistema();
   } else {
     document.getElementById("loginSection").classList.remove("hidden");
   }
-};
+});
 
 function fazerLogin() {
   const senha = document.getElementById("senha").value;
@@ -20,8 +20,10 @@ function fazerLogin() {
 }
 
 function fazerLogout() {
-  localStorage.removeItem("logado");
-  location.reload();
+  if (confirm("Deseja realmente sair?")) {
+    localStorage.removeItem("logado");
+    location.reload();
+  }
 }
 
 function mostrarSistema() {
@@ -43,7 +45,7 @@ form.addEventListener('submit', e => {
   e.preventDefault();
 
   const evento = {
-    titulo: document.getElementById('titulo').value,
+    titulo: document.getElementById('titulo').value.trim(),
     dataHora: document.getElementById('dataHora').value,
     local: document.getElementById('local').value,
     publico: document.getElementById('publico').value,
@@ -51,10 +53,17 @@ form.addEventListener('submit', e => {
     descricao: document.getElementById('descricao').value
   };
 
+  if (!evento.titulo) {
+    alert("O título do evento é obrigatório!");
+    return;
+  }
+
   if (editando === -1) {
     eventos.push(evento);
+    mostrarMensagem("Evento cadastrado com sucesso!");
   } else {
     eventos[editando] = evento;
+    mostrarMensagem("Evento atualizado com sucesso!", "yellow");
     editando = -1;
   }
 
@@ -115,5 +124,14 @@ function excluirEvento(index) {
     eventos.splice(index, 1);
     localStorage.setItem('eventos', JSON.stringify(eventos));
     renderizarEventos();
+    mostrarMensagem("Evento excluído com sucesso!", "red");
   }
+}
+
+function mostrarMensagem(texto, cor = "green") {
+  const aviso = document.createElement("div");
+  aviso.textContent = texto;
+  aviso.className = `text-${cor}-600 font-semibold mt-4 text-center`;
+  form.appendChild(aviso);
+  setTimeout(() => aviso.remove(), 3000);
 }
