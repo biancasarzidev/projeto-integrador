@@ -199,6 +199,7 @@ input[type="datetime-local"] {
 /* Forçar que datetime-local tenha mesmo estilo que os outros inputs */
 input[type="datetime-local"] {
   padding: 0.75rem;
+  padding-right: 0.5rem; /* Safari fix */
   border: 1px solid #d1d5db;
   border-radius: 0.75rem;
   font-size: 1rem;
@@ -207,8 +208,10 @@ input[type="datetime-local"] {
   box-sizing: border-box;
   min-height: 48px;
   background-color: white;
-  appearance: none;              /* <- aqui está o truque pro Safari/iOS */
-  -webkit-appearance: none;      /* <- garante que ele siga o layout padrão */
+  appearance: none;
+  -webkit-appearance: none;
+  min-width: 0; /* evita esticar no iOS */
 }
+
 
 
