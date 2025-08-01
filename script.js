@@ -1,8 +1,43 @@
+// 🔐 Login simples
+const senhaCorreta = "uningati2025";
+
+window.onload = () => {
+  if (localStorage.getItem("logado") === "true") {
+    mostrarSistema();
+  } else {
+    document.getElementById("loginSection").classList.remove("hidden");
+  }
+};
+
+function fazerLogin() {
+  const senha = document.getElementById("senha").value;
+  if (senha === senhaCorreta) {
+    localStorage.setItem("logado", "true");
+    mostrarSistema();
+  } else {
+    alert("Senha incorreta!");
+  }
+}
+
+function fazerLogout() {
+  localStorage.removeItem("logado");
+  location.reload();
+}
+
+function mostrarSistema() {
+  document.getElementById("loginSection").classList.add("hidden");
+  document.getElementById("sistema").classList.remove("hidden");
+}
+
+// 🎯 Lógica de agendamento
 const form = document.getElementById('formEvento');
 const lista = document.getElementById('listaEventos');
 const filtroCurso = document.getElementById('filtroCurso');
-let eventos = [];
+
+let eventos = JSON.parse(localStorage.getItem('eventos')) || [];
 let editando = -1;
+
+renderizarEventos();
 
 form.addEventListener('submit', e => {
   e.preventDefault();
@@ -23,6 +58,7 @@ form.addEventListener('submit', e => {
     editando = -1;
   }
 
+  localStorage.setItem('eventos', JSON.stringify(eventos));
   form.reset();
   renderizarEventos();
 });
@@ -68,6 +104,7 @@ function editarEvento(index) {
 function excluirEvento(index) {
   if (confirm('Tem certeza que deseja excluir este evento?')) {
     eventos.splice(index, 1);
+    localStorage.setItem('eventos', JSON.stringify(eventos));
     renderizarEventos();
   }
 }

@@ -4,51 +4,74 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Agendamento de Eventos - Uningá</title>
+
+  <!-- Tailwind CSS -->
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  
+  <!-- Favicon  -->
+  <link rel="icon" type="image/png" href="favicon.png" />
+
   <link rel="stylesheet" href="style.css" />
-  <link rel="shortcut icon" href="imagens/favicon.jfif" type="image/x-icon">
 </head>
+
 <body class="bg-gradient-to-br from-indigo-100 to-purple-200 text-gray-800 font-sans">
-  <header class="bg-gradient-to-r from-indigo-700 to-indigo-500 text-white py-6 shadow-md">
-    <div class="container mx-auto px-4">
-      <h1 class="text-3xl font-extrabold tracking-tight">Agendamento de Eventos - Uningá</h1>
+
+  <!-- 🔐 Login -->
+  <section id="loginSection" class="min-h-screen flex items-center justify-center">
+    <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-sm">
+      <h2 class="text-2xl font-bold mb-4 text-center text-indigo-700">Login</h2>
+      <input type="password" id="senha" placeholder="Digite a senha" class="w-full p-3 border rounded mb-4 focus:outline-none focus:ring-2 focus:ring-indigo-400">
+      <button onclick="fazerLogin()" class="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700">Entrar</button>
     </div>
-  </header>
+  </section>
 
-  <main class="container mx-auto px-4 py-10">
-    <!-- Formulário -->
-    <section class="form-section">
-      <h2 class="section-title text-indigo-700">Cadastrar Evento</h2>
-      <form id="formEvento" class="form-grid">
-        <input type="text" id="titulo" placeholder="Título do Evento" required>
-        <input type="datetime-local" id="dataHora" required>
-        <input type="text" id="local" placeholder="Local do Evento" required>
-        <input type="text" id="publico" placeholder="Público-alvo">
-        <select id="curso">
-          <option value="Sistemas para Internet">Sistemas para Internet</option>
-          <option value="Análise e Desenvolvimento de Sistemas">ADS</option>
-          <option value="Engenharia da Computação">Engenharia da Computação</option>
-        </select>
-        <textarea id="descricao" placeholder="Descrição do Evento" required></textarea>
-        <button type="submit">Cadastrar</button>
-      </form>
-    </section>
+  <!-- 🔒 Conteúdo do sistema visível só após login -->
+  <div id="sistema" class="hidden">
 
-    <!-- Lista de Eventos -->
-    <section class="list-section">
-      <h2 class="section-title text-purple-700">Eventos Cadastrados</h2>
-      <div class="mb-6">
-        <label for="filtroCurso" class="block mb-2 font-semibold text-gray-700">Filtrar por curso:</label>
-        <select id="filtroCurso">
-          <option value="">Todos</option>
-          <option value="Sistemas para Internet">Sistemas para Internet</option>
-          <option value="Análise e Desenvolvimento de Sistemas">ADS</option>
-          <option value="Engenharia da Computação">Engenharia da Computação</option>
-        </select>
+    <header class="bg-gradient-to-r from-indigo-700 to-indigo-500 text-white py-6 shadow-md">
+      <div class="container mx-auto px-4 flex justify-between items-center">
+        <h1 class="text-3xl font-extrabold tracking-tight">Agendamento de Eventos - Uningá</h1>
+        <button onclick="fazerLogout()" class="bg-red-500 px-4 py-2 rounded hover:bg-red-600">Sair</button>
       </div>
-      <ul id="listaEventos" class="space-y-6"></ul>
-    </section>
-  </main>
+    </header>
+
+    <main class="container mx-auto px-4 py-10">
+
+      <!-- Formulário -->
+      <section class="form-section">
+        <h2 class="section-title text-indigo-700">Cadastrar Evento</h2>
+        <form id="formEvento" class="form-grid">
+          <input type="text" id="titulo" placeholder="Título do Evento" required>
+          <input type="datetime-local" id="dataHora" required>
+          <input type="text" id="local" placeholder="Local do Evento" required>
+          <input type="text" id="publico" placeholder="Público-alvo">
+          <select id="curso">
+            <option value="Sistemas para Internet">Sistemas para Internet</option>
+            <option value="Análise e Desenvolvimento de Sistemas">ADS</option>
+            <option value="Engenharia da Computação">Engenharia da Computação</option>
+          </select>
+          <textarea id="descricao" placeholder="Descrição do Evento" required></textarea>
+          <button type="submit">Cadastrar</button>
+        </form>
+      </section>
+
+      <!-- Lista de Eventos -->
+      <section class="list-section">
+        <h2 class="section-title text-purple-700">Eventos Cadastrados</h2>
+        <div class="mb-6">
+          <label for="filtroCurso" class="block mb-2 font-semibold text-gray-700">Filtrar por curso:</label>
+          <select id="filtroCurso">
+            <option value="">Todos</option>
+            <option value="Sistemas para Internet">Sistemas para Internet</option>
+            <option value="Análise e Desenvolvimento de Sistemas">ADS</option>
+            <option value="Engenharia da Computação">Engenharia da Computação</option>
+          </select>
+        </div>
+        <ul id="listaEventos" class="space-y-6"></ul>
+      </section>
+
+    </main>
+  </div>
 
   <script src="script.js"></script>
 </body>
