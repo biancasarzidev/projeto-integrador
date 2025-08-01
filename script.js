@@ -75,7 +75,7 @@ function renderizarEventos() {
     li.className = 'border p-4 rounded shadow bg-white';
     li.innerHTML = `
       <h3 class="text-lg font-bold text-indigo-700">${evento.titulo}</h3>
-      <p><strong>Data/Hora:</strong> ${evento.dataHora}</p>
+      <p><strong>Data/Hora:</strong> ${formatarDataHora(evento.dataHora)}</p>
       <p><strong>Local:</strong> ${evento.local}</p>
       <p><strong>Público:</strong> ${evento.publico}</p>
       <p><strong>Curso:</strong> ${evento.curso}</p>
@@ -87,6 +87,15 @@ function renderizarEventos() {
     `;
     lista.appendChild(li);
   });
+}
+
+function formatarDataHora(isoString) {
+  const data = new Date(isoString);
+  const [dia, hora] = data.toLocaleString("pt-BR", {
+    dateStyle: "short",
+    timeStyle: "short"
+  }).split(', ');
+  return `${dia} às ${hora}`;
 }
 
 function editarEvento(index) {
