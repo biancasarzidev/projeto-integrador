@@ -17,6 +17,20 @@ body {
 }
 
 /* ==========================
+   Suavizar troca entre telas (login/sistema)
+========================== */
+#loginSection,
+#sistema {
+  transition: opacity 0.3s ease;
+}
+
+.hidden {
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+}
+
+/* ==========================
    Seções principais
 ========================== */
 .form-section,
@@ -127,20 +141,16 @@ body {
 }
 
 /* ==========================
-   Tela de Login com imagem
+   Tela de Login com imagem (se usar)
 ========================== */
 #loginSection {
-  position: relative;
   background-image: url("imagens/fachada.png");
   background-size: cover;
   background-position: center;
   min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  position: relative;
 }
 
-/* Sobreposição escura por cima da imagem */
 #loginSection::before {
   content: "";
   position: absolute;
@@ -149,7 +159,6 @@ body {
   z-index: 1;
 }
 
-/* Conteúdo do login acima da imagem */
 #loginSection > div {
   position: relative;
   z-index: 2;
@@ -159,5 +168,5 @@ body {
   border-radius: 1rem;
   width: 100%;
   max-width: 400px;
-  box-shadow: 0 10px 15px rgba(0,0,0,0.15);
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.15);
 }

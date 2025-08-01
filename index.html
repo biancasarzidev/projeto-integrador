@@ -2,23 +2,22 @@
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Agendamento de Eventos - Uningá</title>
 
   <!-- Tailwind CSS -->
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
 
   <!-- Favicon -->
-  <link rel="icon" type="image/png" href="imagens/favicon.jfif" />
+  <link rel="icon" type="image/png" href="favicon.png" />
 
-  <!-- CSS personalizado -->
+  <!-- Estilo personalizado -->
   <link rel="stylesheet" href="style.css" />
 </head>
+<body class="bg-gradient-to-br from-indigo-100 to-purple-200 text-gray-800 font-sans">
 
-<body class="bg-gradient-to-br from-indigo-100 to-purple-200 text-gray-800 font-sans overflow-x-hidden">
-
-  <!-- 🔐 Login -->
-  <section id="loginSection" class="min-h-screen flex items-center justify-center px-4">
+  <!-- 🔐 Tela de Login -->
+  <section id="loginSection" class="min-h-screen flex items-center justify-center">
     <div class="bg-white p-8 rounded-xl shadow-lg w-full max-w-sm">
       <h2 class="text-2xl font-bold mb-4 text-center text-indigo-700">Login</h2>
       <input type="password" id="senha" placeholder="Digite a senha" class="w-full p-3 border rounded mb-4 focus:outline-none focus:ring-2 focus:ring-indigo-400">
@@ -26,19 +25,20 @@
     </div>
   </section>
 
-  <!-- 🔒 Conteúdo do sistema visível só após login -->
+  <!-- 🔒 Sistema (escondido até login) -->
   <div id="sistema" class="hidden">
-
+    <!-- Header com botão de logout -->
     <header class="bg-gradient-to-r from-indigo-700 to-indigo-500 text-white py-6 shadow-md">
-      <div class="max-w-screen-lg w-full mx-auto px-4 flex justify-between items-center">
+      <div class="container mx-auto px-4 flex justify-between items-center">
         <h1 class="text-3xl font-extrabold tracking-tight">Agendamento de Eventos - Uningá</h1>
         <button onclick="fazerLogout()" class="bg-red-500 px-4 py-2 rounded hover:bg-red-600">Sair</button>
       </div>
     </header>
 
-    <main class="w-full max-w-screen-lg mx-auto px-4 py-10">
+    <!-- Conteúdo principal -->
+    <main class="container mx-auto px-4 py-10">
 
-      <!-- Formulário -->
+      <!-- Seção de Cadastro -->
       <section class="form-section">
         <h2 class="section-title text-indigo-700">Cadastrar Evento</h2>
         <form id="formEvento" class="form-grid">
@@ -56,12 +56,12 @@
         </form>
       </section>
 
-      <!-- Lista de Eventos -->
+      <!-- Seção de Lista -->
       <section class="list-section">
         <h2 class="section-title text-purple-700">Eventos Cadastrados</h2>
         <div class="mb-6">
           <label for="filtroCurso" class="block mb-2 font-semibold text-gray-700">Filtrar por curso:</label>
-          <select id="filtroCurso" class="w-full md:w-1/2">
+          <select id="filtroCurso">
             <option value="">Todos</option>
             <option value="Sistemas para Internet">Sistemas para Internet</option>
             <option value="Análise e Desenvolvimento de Sistemas">ADS</option>
@@ -74,6 +74,7 @@
     </main>
   </div>
 
+  <!-- Script -->
   <script src="script.js"></script>
 </body>
 </html>
