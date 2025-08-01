@@ -207,5 +207,8 @@ input[type="datetime-local"] {
   box-sizing: border-box;
   min-height: 48px;
   background-color: white;
+  appearance: none;              /* <- aqui está o truque pro Safari/iOS */
+  -webkit-appearance: none;      /* <- garante que ele siga o layout padrão */
 }
+
 
