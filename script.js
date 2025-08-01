@@ -9,13 +9,13 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("loginSection").classList.remove("hidden");
   }
 
-  // Preenche a data/hora com o horário atual no carregamento
-  const campoDataHora = document.getElementById("dataHora");
-  if (campoDataHora && !campoDataHora.value) {
-    const agora = new Date();
-    agora.setMinutes(agora.getMinutes() - agora.getTimezoneOffset()); // corrige fuso horário
-    campoDataHora.value = agora.toISOString().slice(0, 16); // formato para input datetime-local
-  }
+ const campoDataHora = document.getElementById("dataHora");
+if (campoDataHora && !campoDataHora.value) {
+  const agora = new Date();
+  agora.setMinutes(agora.getMinutes() - agora.getTimezoneOffset()); // corrige fuso horário
+  campoDataHora.value = agora.toISOString().slice(0, 16); // aplica no formato do input
+}
+
 
   // Variáveis DOM
   const form = document.getElementById('formEvento');
