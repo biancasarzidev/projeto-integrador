@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema de Agendamento de Eventos - Uningá</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 text-gray-800">
+  <header class="bg-indigo-600 text-white py-6 shadow">
+    <div class="container mx-auto px-4">
+      <h1 class="text-2xl font-bold">Agendamento de Eventos - TI Uningá</h1>
+    </div>
+  </header>
+
+  <main class="container mx-auto px-4 py-8">
+    <!-- Formulário de Cadastro de Evento -->
+    <section class="bg-white rounded-lg shadow p-6 mb-10">
+      <h2 class="text-xl font-semibold mb-4">Cadastrar Evento</h2>
+      <form id="formEvento" class="space-y-4">
+        <input class="w-full p-2 border rounded" type="text" id="titulo" placeholder="Título do Evento" required>
+        <input class="w-full p-2 border rounded" type="datetime-local" id="dataHora" required>
+        <input class="w-full p-2 border rounded" type="text" id="local" placeholder="Local do Evento" required>
+        <input class="w-full p-2 border rounded" type="text" id="publico" placeholder="Público-alvo" required>
+        <select id="curso" class="w-full p-2 border rounded">
+          <option value="Sistemas para Internet">Sistemas para Internet</option>
+          <option value="Análise e Desenvolvimento de Sistemas">ADS</option>
+          <option value="Engenharia da Computação">Engenharia da Computação</option>
+        </select>
+        <textarea class="w-full p-2 border rounded" id="descricao" placeholder="Descrição do Evento" required></textarea>
+        <button class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700" type="submit">Cadastrar</button>
+      </form>
+    </section>
+
+    <!-- Lista de Eventos -->
+    <section class="bg-white rounded-lg shadow p-6">
+      <h2 class="text-xl font-semibold mb-4">Eventos Cadastrados</h2>
+      <div class="mb-4">
+        <label class="block mb-1 font-medium" for="filtroCurso">Filtrar por curso:</label>
+        <select id="filtroCurso" class="w-full p-2 border rounded">
+          <option value="">Todos</option>
+          <option value="Sistemas para Internet">Sistemas para Internet</option>
+          <option value="Análise e Desenvolvimento de Sistemas">ADS</option>
+          <option value="Engenharia da Computação">Engenharia da Computação</option>
+        </select>
+      </div>
+      <ul id="listaEventos" class="space-y-4"></ul>
+    </section>
+  </main>
+
+  <script>
+    const form = document.getElementById('formEvento');
+    const lista = document.getElementById('listaEventos');
+    const filtroCurso = document.getElementById('filtroCurso');
+    let eventos = [];
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+
+      const novoEvento = {
+        titulo: document.getElementById('titulo').value,
+        dataHora: document.getElementById('dataHora').value,
+        local: document.getElementById('local').value,
+        publico: document.getElementById('publico').value,
+        curso: document.getElementById('curso').value,
+        descricao: document.getElementById('descricao').value
+      };
+
+      eventos.push(novoEvento);
+      form.reset();
+      renderizarEventos();
+    });
+
+    filtroCurso.addEventListener('change', renderizarEventos);
+
+    function renderizarEventos() {
+      const filtro = filtroCurso.value;
+      lista.innerHTML = '';
+      const eventosFiltrados = filtro ? eventos.filter(e => e.curso === filtro) : eventos;
+
+      eventosFiltrados.forEach(evento => {
+        const li = document.createElement('li');
+        li.className = 'border p-4 rounded shadow';
+        li.innerHTML = `
+          <h3 class="text-lg font-bold">${evento.titulo}</h3>
+          <p><strong>Data/Hora:</strong> ${evento.dataHora}</p>
+          <p><strong>Local:</strong> ${evento.local}</p>
+          <p><strong>Público:</strong> ${evento.publico}</p>
+          <p><strong>Curso:</strong> ${evento.curso}</p>
+          <p><strong>Descrição:</strong> ${evento.descricao}</p>
+        `;
+        lista.appendChild(li);
+      });
+    }
+  </script>
+</body>
+</html>
