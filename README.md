@@ -20,3 +20,15 @@ Sistema simples para **cadastrar, gerenciar e visualizar eventos acadêmicos** p
 - **LocalStorage** (armazenamento local)
 
 ## 📂 Estrutura de Pastas
+
+## 📸 Telas do Sistema
+
+### Tela de Login
+![Tela de Login](imagens/login.png)
+
+### Tela de Cadastro de Evento
+![Tela de Cadastro](imagens/cadastro.png)
+
+### Tela de Listagem de Eventos
+![Tela de Listagem](imagens/lista.png)
+
