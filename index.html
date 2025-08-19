@@ -2,7 +2,8 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <!-- viewport com safe-area para iOS e sem zoom inesperado -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
   <title>Agendamento de Eventos - Uningá</title>
 
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
@@ -40,9 +41,16 @@
   <div id="sistema" class="hidden" aria-live="polite">
     <!-- Header -->
     <header class="bg-gradient-to-r from-indigo-700 to-indigo-500 text-white py-6 shadow-md">
-      <div class="container mx-auto px-4 flex justify-between items-center">
-        <h1 class="text-3xl font-extrabold tracking-tight">Agendamento de Eventos - Uningá</h1>
-        <button id="btnLogout" class="bg-red-500 px-4 py-2 rounded hover:bg-red-600">Sair</button>
+      <!-- adicionados: flex-wrap, gap e min-w-0 p/ evitar overflow -->
+      <div class="container mx-auto px-4 flex justify-between items-center flex-wrap gap-2">
+        <!-- h1 pode quebrar e encolher -->
+        <h1 class="text-3xl font-extrabold tracking-tight break-words leading-snug flex-1 min-w-0">
+          Agendamento de Eventos - Uningá
+        </h1>
+        <!-- botão não estoura -->
+        <button id="btnLogout" class="bg-red-500 px-4 py-2 rounded hover:bg-red-600 flex-shrink-0">
+          Sair
+        </button>
       </div>
     </header>
 
@@ -52,23 +60,33 @@
       <section class="form-section">
         <h2 class="section-title text-2xl font-bold mb-4 text-indigo-700">Cadastrar Evento</h2>
 
+        <!-- grid já responsivo; novalidate ok -->
         <form id="formEvento" class="form-grid grid gap-4 md:grid-cols-2" novalidate>
           <div class="md:col-span-2">
             <label for="titulo" class="block text-sm font-medium text-gray-700">Título do Evento</label>
-            <input type="text" id="titulo" name="titulo" placeholder="Ex.: Semana da Computação" required maxlength="120"
-              class="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-400">
+            <input
+              type="text" id="titulo" name="titulo"
+              placeholder="Ex.: Semana da Computação"
+              required maxlength="120"
+              class="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-400"
+            >
           </div>
 
           <div>
             <label for="dataHora" class="block text-sm font-medium text-gray-700">Data e Hora</label>
-            <input type="datetime-local" id="dataHora" name="dataHora" required
-              class="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-400">
+            <input
+              type="datetime-local" id="dataHora" name="dataHora" required
+              class="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-400"
+            >
           </div>
 
           <div>
             <label for="local" class="block text-sm font-medium text-gray-700">Local</label>
-            <input type="text" id="local" name="local" placeholder="Auditório 2" required maxlength="80"
-              class="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-400">
+            <input
+              type="text" id="local" name="local"
+              placeholder="Auditório 2" required maxlength="80"
+              class="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-400"
+            >
           </div>
 
           <div>
@@ -82,15 +100,23 @@
           </div>
 
           <div>
-            <label for="publico" class="block text-sm font-medium text-gray-700">Público-alvo</label>
-            <input type="text" id="publico" name="publico" placeholder="Acadêmicos de TI, docentes, comunidade"
-              class="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-400">
+            <label for="publico" class="block text-sm font-medium text-gray-700">Público-alvo <span class="text-gray-400">(opcional)</span></label>
+            <input
+              type="text" id="publico" name="publico"
+              placeholder="Acadêmicos de TI, docentes, comunidade"
+              class="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-400"
+            >
           </div>
 
           <div class="md:col-span-2">
-            <label for="descricao" class="block text-sm font-medium text-gray-700">Descrição</label>
-            <textarea id="descricao" name="descricao" placeholder="Resumo do evento e objetivos" required rows="4"
-              class="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-400"></textarea>
+            <label for="descricao" class="block text-sm font-medium text-gray-700">Descrição <span class="text-gray-400">(opcional)</span></label>
+            <!-- REMOVIDO required para ficar opcional -->
+            <textarea
+              id="descricao" name="descricao"
+              placeholder="Resumo do evento e objetivos"
+              rows="4"
+              class="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-400"
+            ></textarea>
           </div>
 
           <div class="md:col-span-2 flex items-center justify-end gap-3">
@@ -104,7 +130,7 @@
       <section class="list-section">
         <div class="flex items-end justify-between flex-wrap gap-4 mb-4">
           <h2 class="section-title text-2xl font-bold text-purple-700">Eventos Cadastrados</h2>
-          <div class="flex gap-3">
+          <div class="flex gap-3 flex-wrap">
             <div>
               <label for="filtroCurso" class="block mb-1 text-sm font-semibold text-gray-700">Filtrar por curso</label>
               <select id="filtroCurso" class="p-2 border rounded">
@@ -112,6 +138,7 @@
                 <option value="Sistemas para Internet">Sistemas para Internet</option>
                 <option value="Análise e Desenvolvimento de Sistemas">ADS</option>
                 <option value="Engenharia da Computação">Engenharia da Computação</option>
+                <option value="Direito">Direito</option>
               </select>
             </div>
             <div>
