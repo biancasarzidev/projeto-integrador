@@ -10,34 +10,43 @@
 /* ==========================
    Base & tipografia
 ========================== */
-body {
-  overflow-x: hidden;
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;       
+  max-width: 100%;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: #f3f4f6;
   color: #1f2937;
 }
 
-/* Se precisar de container custom, use esta classe
-   (evita conflito com .container do Tailwind) */
+* {
+  box-sizing: border-box;  
+}
+
+img, video {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ==========================
+   Containers
+========================== */
 .container-custom {
   max-width: 1024px;
   margin: 0 auto;
-  padding-left: 1rem;
-  padding-right: 1rem;
-  box-sizing: border-box;
+  padding: 0 1rem;
 }
 
 /* ==========================
    Suavizar troca entre telas (login/sistema)
-   (não sobrescrevemos .hidden do Tailwind)
 ========================== */
 #loginSection,
 #sistema {
   transition: opacity 0.3s ease;
 }
 
-/* Classe utilitária opcional para animações de opacidade
-   sem afetar a .hidden do Tailwind */
 .is-hidden {
   opacity: 0;
   pointer-events: none;
@@ -45,7 +54,6 @@ body {
   transition: opacity 0.3s ease;
 }
 
-/* Respeita preferências do usuário para movimento */
 @media (prefers-reduced-motion: reduce) {
   #loginSection, #sistema,
   .form-grid input, .form-grid select, .form-grid textarea,
@@ -65,6 +73,7 @@ body {
   padding: 2rem;
   margin-bottom: 3rem;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  max-width: 100%;
 }
 
 /* ==========================
@@ -84,6 +93,7 @@ body {
   display: grid;
   grid-template-columns: 1fr;
   gap: 1rem;
+  width: 100%;
 }
 
 @media (min-width: 768px) {
@@ -109,7 +119,7 @@ body {
   font-size: 1rem;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   width: 100%;
-  box-sizing: border-box;
+  max-width: 100%;
   min-height: 48px;
   background-color: #ffffff;
 }
@@ -129,7 +139,7 @@ input[type="datetime-local"] {
   font-size: 1rem;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
   width: 100%;
-  box-sizing: border-box;
+  max-width: 100%;
   background-color: #ffffff;
   appearance: none;
   -webkit-appearance: none;
@@ -158,6 +168,8 @@ input[type="datetime-local"] {
   transition: background-color 0.2s, transform 0.2s;
   font-weight: 600;
   font-size: 1rem;
+  width: 100%;
+  max-width: 100%;
 }
 
 .form-grid button:hover {
@@ -170,24 +182,24 @@ input[type="datetime-local"] {
 ========================== */
 .list-section ul {
   margin-top: 1rem;
+  padding: 0;
 }
 
-/* Cartões de evento */
 .list-section li {
+  list-style: none;
   border: 1px solid #e5e7eb;
   border-radius: 0.75rem;
   padding: 1rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   background: #ffffff;
+  max-width: 100%;
 }
 
-/* Estado de carregando na lista */
 #listaEventos[aria-busy="true"] {
   opacity: 0.6;
   pointer-events: none;
 }
 
-/* Estado vazio */
 #estadoVazio {
   text-align: center;
   padding: 1rem;
@@ -196,18 +208,18 @@ input[type="datetime-local"] {
   color: #6b7280;
 }
 
-/* Botões Editar/Excluir (se usar classes dedicadas) */
+/* Botões Editar/Excluir */
 .btn-edit {
-  background-color: #10b981; /* emerald-500 */
+  background-color: #10b981;
   color: #ffffff;
 }
-.btn-edit:hover { background-color: #059669; } /* emerald-600 */
+.btn-edit:hover { background-color: #059669; }
 
 .btn-delete {
-  background-color: #ef4444; /* red-500 */
+  background-color: #ef4444;
   color: #ffffff;
 }
-.btn-delete:hover { background-color: #dc2626; } /* red-600 */
+.btn-delete:hover { background-color: #dc2626; }
 
 /* ==========================
    Tela de Login com imagem
@@ -235,15 +247,16 @@ input[type="datetime-local"] {
   border-radius: 1rem;
   width: 100%;
   max-width: 400px;
+  margin: auto;
   box-shadow: 0 10px 15px rgba(0, 0, 0, 0.15);
 }
 
 /* ==========================
-   Pequenos refinamentos visuais
+   Refinamentos visuais
 ========================== */
 .section-title.text-indigo-700,
 .section-title.text-purple-700 {
-  text-align: left; /* opcional: alinha com conteúdo */
+  text-align: left;
 }
 
 .list-section .section-title {
