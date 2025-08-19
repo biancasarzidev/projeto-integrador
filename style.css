@@ -262,3 +262,58 @@ input[type="datetime-local"] {
 .list-section .section-title {
   margin-bottom: 1rem;
 }
+
+/* ======= Mobile fix pack (evita corte lateral) ======= */
+html, body { width: 100%; overflow-x: hidden; }
+
+/* Permite que tudo encolha bem em telas estreitas */
+header .container,
+header .container > * { min-width: 0; }
+
+/* Header: quebra em duas linhas se precisar e dá espaço entre itens */
+@media (max-width: 640px) {
+  header .container {
+    display: flex;
+    flex-wrap: wrap;      /* <-- permite quebrar linha */
+    gap: 0.5rem 1rem;
+  }
+
+  /* Título não estoura a linha */
+  header h1 {
+    font-size: 1.25rem;   /* ~text-xl */
+    line-height: 1.4;
+    word-break: break-word;
+    overflow-wrap: anywhere; /* força quebra se necessário */
+    flex: 1 1 100%;       /* ocupa a linha toda quando faltar espaço */
+  }
+
+  /* Botão Sair não estoura, fica na linha de baixo se precisar */
+  header button {
+    flex: 0 0 auto;
+  }
+
+  /* Reforça padding lateral no conteúdo */
+  .container, .container-custom, main.container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+/* Impede que elementos comuns passem de 100% da largura */
+section, header, main, div, ul, li,
+.form-section, .list-section,
+.form-grid, .form-grid > * {
+  max-width: 100%;
+}
+
+/* Em listas, evita qualquer scroll horizontal acidental */
+.list-section ul { overflow-x: hidden; }
+
+/* Inputs/botões nunca passam de 100% */
+.form-grid input,
+.form-grid select,
+.form-grid textarea,
+.form-grid button {
+  max-width: 100%;
+  width: 100%;
+}
