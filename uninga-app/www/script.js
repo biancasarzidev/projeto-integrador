@@ -116,7 +116,7 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 
   const validarEvento = (e) => {
-    if (!e.titulo || !e.dataHora || !e.local || !e.descricao) {
+    if (!e.titulo || !e.dataHora || !e.local) {
       mostrarMensagem("Preencha os campos obrigatórios!", "erro");
       return false;
     }
