@@ -4,16 +4,29 @@
   <meta charset="UTF-8" />
   <!-- viewport com safe-area para iOS e sem zoom inesperado -->
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+
+  <!-- iOS: abrir como app e status bar -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Eventos Uningá">
+
+  <!-- Manifest (PWA) + cor do tema -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#4f46e5">
+
+  <!-- Ícones iOS (vários tamanhos) -->
+  <link rel="apple-touch-icon" sizes="120x120" href="imagens/icon-120.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="imagens/icon-152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="imagens/icon-180.png">
+  <!-- fallback -->
+  <link rel="apple-touch-icon" href="imagens/icon-192.png">
+
   <title>Agendamento de Eventos - Uningá</title>
 
+  <!-- Estilos -->
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
   <link rel="icon" type="image/png" href="imagens/favicon.jfif" />
   <link rel="stylesheet" href="style.css" />
-
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#4f46e5">
-  <link rel="apple-touch-icon" href="imagens/favicon.jfif">
-
 </head>
 <body class="bg-gradient-to-br from-indigo-100 to-purple-200 text-gray-800 font-sans">
 
@@ -46,13 +59,10 @@
   <div id="sistema" class="hidden" aria-live="polite">
     <!-- Header -->
     <header class="bg-gradient-to-r from-indigo-700 to-indigo-500 text-white py-6 shadow-md">
-      <!-- adicionados: flex-wrap, gap e min-w-0 p/ evitar overflow -->
       <div class="container mx-auto px-4 flex justify-between items-center flex-wrap gap-2">
-        <!-- h1 pode quebrar e encolher -->
         <h1 class="text-3xl font-extrabold tracking-tight break-words leading-snug flex-1 min-w-0">
           Agendamento de Eventos - Uningá
         </h1>
-        <!-- botão não estoura -->
         <button id="btnLogout" class="bg-red-500 px-4 py-2 rounded hover:bg-red-600 flex-shrink-0">
           Sair
         </button>
@@ -65,7 +75,6 @@
       <section class="form-section">
         <h2 class="section-title text-2xl font-bold mb-4 text-indigo-700">Cadastrar Evento</h2>
 
-        <!-- grid já responsivo; novalidate ok -->
         <form id="formEvento" class="form-grid grid gap-4 md:grid-cols-2" novalidate>
           <div class="md:col-span-2">
             <label for="titulo" class="block text-sm font-medium text-gray-700">Título do Evento</label>
@@ -115,7 +124,6 @@
 
           <div class="md:col-span-2">
             <label for="descricao" class="block text-sm font-medium text-gray-700">Descrição <span class="text-gray-400">(opcional)</span></label>
-            <!-- REMOVIDO required para ficar opcional -->
             <textarea
               id="descricao" name="descricao"
               placeholder="Resumo do evento e objetivos"
@@ -164,12 +172,11 @@
 
   <!-- Scripts -->
   <script src="script.js"></script>
-
   <script>
+    // registra o service worker (PWA)
     if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js');
+      navigator.serviceWorker.register('sw.js');
     }
   </script>
-
 </body>
 </html>
