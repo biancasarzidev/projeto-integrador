@@ -9,6 +9,11 @@
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
   <link rel="icon" type="image/png" href="imagens/favicon.jfif" />
   <link rel="stylesheet" href="style.css" />
+
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#4f46e5">
+  <link rel="apple-touch-icon" href="imagens/favicon.jfif">
+
 </head>
 <body class="bg-gradient-to-br from-indigo-100 to-purple-200 text-gray-800 font-sans">
 
@@ -159,5 +164,12 @@
 
   <!-- Scripts -->
   <script src="script.js"></script>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js');
+    }
+  </script>
+
 </body>
 </html>
