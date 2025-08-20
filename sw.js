@@ -1,5 +1,5 @@
 // 📦 Versão do cache (mude a cada deploy para forçar atualização)
-const APP_VERSION = "v3";
+const APP_VERSION = "v4"; 
 
 // Prefixos e nomes dos caches
 const CACHE_PREFIX = "uninga-cache";
