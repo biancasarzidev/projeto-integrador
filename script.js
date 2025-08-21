@@ -4,7 +4,9 @@ const senhaCorreta = "uningati2025";
 document.addEventListener("DOMContentLoaded", () => {
   "use strict";
 
+  // ==========================
   // Elementos principais
+  // ==========================
   const loginSection = document.getElementById("loginSection");
   const sistema = document.getElementById("sistema");
   const loginForm = document.getElementById("loginForm") || null;
@@ -16,10 +18,55 @@ document.addEventListener("DOMContentLoaded", () => {
   const buscaTexto = document.getElementById("buscaTexto");
   const estadoVazio = document.getElementById("estadoVazio");
 
-  // --------- Login / Sessão ----------
+  const campoDataHora = document.getElementById("dataHora");
+
+  // ==========================
+  // Catálogo de cursos (fonte única)
+  // ==========================
+  const cursos = [
+    { value: "Sistemas para Internet", label: "Sistemas para Internet" },
+    {
+      value: "Análise e Desenvolvimento de Sistemas",
+      label: "Análise e Desenvolvimento de Sistemas (ADS)",
+    },
+    { value: "Engenharia da Computação", label: "Engenharia da Computação" },
+    { value: "Direito", label: "Direito" },
+  ];
+
+  // Preenche os <select> a partir de 'cursos'
+  function preencherSelects() {
+    // <select id="curso"> (formulário)
+    const selCurso = document.getElementById("curso");
+    if (selCurso) {
+      selCurso.innerHTML = "";
+      cursos.forEach((c) => {
+        selCurso.insertAdjacentHTML(
+          "beforeend",
+          `<option value="${c.value}">${c.label}</option>`
+        );
+      });
+    }
+
+    // <select id="filtroCurso"> (filtro de lista)
+    if (filtroCurso) {
+      filtroCurso.innerHTML = `<option value="">Todos</option>`;
+      cursos.forEach((c) => {
+        // Mostra "ADS" curto no filtro, mas mantém o value completo
+        const labelFiltro = c.label.replace(" (ADS)", "").replace("(ADS)", "ADS");
+        filtroCurso.insertAdjacentHTML(
+          "beforeend",
+          `<option value="${c.value}">${labelFiltro}</option>`
+        );
+      });
+    }
+  }
+
+  // ==========================
+  // Login / Sessão
+  // ==========================
   const mostrarSistema = () => {
-    loginSection.classList.add("hidden");
-    sistema.classList.remove("hidden");
+    loginSection?.classList.add("hidden");
+    sistema?.classList.remove("hidden");
   };
 
   const fazerLogout = () => {
@@ -51,11 +98,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (localStorage.getItem("logado") === "true") {
       mostrarSistema();
     } else {
-      loginSection.classList.remove("hidden");
+      loginSection?.classList.remove("hidden");
     }
   } catch (err) {
     console.warn("Falha ao ler sessão do localStorage", err);
-    loginSection.classList.remove("hidden");
+    loginSection?.classList.remove("hidden");
   }
 
   // Login via formulário
@@ -66,11 +113,11 @@ document.addEventListener("DOMContentLoaded", () => {
       fazerLogin(senha);
     });
   }
-  if (btnLogout) {
-    btnLogout.addEventListener("click", fazerLogout);
-  }
+  if (btnLogout) btnLogout.addEventListener("click", fazerLogout);
 
-  // --------- Dados / Persistência ----------
+  // ==========================
+  // Dados / Persistência
+  // ==========================
   const STORAGE_KEY = "eventos";
   let eventos = [];
   let editando = -1; // index no array "eventos"
@@ -96,17 +143,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
   carregarEventos();
 
-  // Preencher datetime-local com agora (corrigindo fuso)
-  const campoDataHora = document.getElementById("dataHora");
-  const setAgoraNoCampo = () => {
-    if (!campoDataHora) return;
-    const agora = new Date();
-    agora.setMinutes(agora.getMinutes() - agora.getTimezoneOffset());
-    campoDataHora.value = agora.toISOString().slice(0, 16);
+  // ==========================
+  // Utilidades
+  // ==========================
+  // Normaliza string para comparação robusta (sem acentos/caixa/espaços)
+  const normalizar = (str) => {
+    return (str || "")
+      .toString()
+      .trim()
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, ""); // remove acentos
   };
-  if (campoDataHora && !campoDataHora.value) setAgoraNoCampo();
 
-  // --------- Utilidades ----------
+  // Normaliza valor de curso (só trim aqui; comparação usa normalizar())
+  const sanitizeCurso = (value) => (value || "").toString().trim();
+
   const formatarDataHora = (isoString) => {
     const d = new Date(isoString);
     if (isNaN(d.getTime())) return isoString;
@@ -151,25 +203,40 @@ document.addEventListener("DOMContentLoaded", () => {
     return true;
   };
 
-  // --------- Renderização ----------
+  // Preencher datetime-local com agora (corrigindo fuso)
+  const setAgoraNoCampo = () => {
+    if (!campoDataHora) return;
+    const agora = new Date();
+    agora.setMinutes(agora.getMinutes() - agora.getTimezoneOffset());
+    campoDataHora.value = agora.toISOString().slice(0, 16);
+  };
+  if (campoDataHora && !campoDataHora.value) setAgoraNoCampo();
+
+  // ==========================
+  // Renderização
+  // ==========================
   const renderizarEventos = () => {
-    const termo = (buscaTexto?.value || "").toLowerCase().trim();
-    const filtro = (filtroCurso?.value || "").trim();
+    const termo = (buscaTexto?.value || "").toString().trim();
+    const filtro = (filtroCurso?.value || "").toString().trim();
 
     lista.setAttribute("aria-busy", "true");
     lista.innerHTML = "";
 
     let base = [...eventos];
 
-    // Filtro por curso
-    if (filtro) base = base.filter((e) => e.curso === filtro);
+    // Filtro por curso (tolerante a acentos/caixa/espaços)
+    if (filtro) {
+      const filtroNorm = normalizar(filtro);
+      base = base.filter((e) => normalizar(e.curso) === filtroNorm);
+    }
 
-    // Busca texto em título/local
+    // Busca texto em título/local (tolerante)
     if (termo) {
+      const termoNorm = normalizar(termo);
       base = base.filter(
         (e) =>
-          (e.titulo || "").toLowerCase().includes(termo) ||
-          (e.local || "").toLowerCase().includes(termo)
+          normalizar(e.titulo).includes(termoNorm) ||
+          normalizar(e.local).includes(termoNorm)
       );
     }
 
@@ -187,7 +254,7 @@ document.addEventListener("DOMContentLoaded", () => {
       li.className = "border p-4 rounded shadow bg-white";
 
       const h3 = document.createElement("h3");
-      h3.className = "text-lg font-bold text-indigo-700";
+      h3.className = "text-lg font-bold text-indigo-700 break-words";
       h3.textContent = evento.titulo;
 
       const pData = document.createElement("p");
@@ -253,10 +320,15 @@ document.addEventListener("DOMContentLoaded", () => {
     lista.setAttribute("aria-busy", "false");
   };
 
-  // Primeira renderização
+  // ==========================
+  // Inicialização de selects e primeira render
+  // ==========================
+  preencherSelects();
   renderizarEventos();
 
-  // --------- Handlers ----------
+  // ==========================
+  // Handlers
+  // ==========================
   // Submit do formulário
   form.addEventListener("submit", (e) => {
     e.preventDefault();
@@ -266,7 +338,7 @@ document.addEventListener("DOMContentLoaded", () => {
       dataHora: document.getElementById("dataHora").value,
       local: document.getElementById("local").value.trim(),
       publico: document.getElementById("publico").value.trim(),
-      curso: document.getElementById("curso").value,
+      curso: sanitizeCurso(document.getElementById("curso").value),
       descricao: document.getElementById("descricao").value.trim(),
     };
 
@@ -288,7 +360,9 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Filtro por curso
-  filtroCurso.addEventListener("change", renderizarEventos);
+  if (filtroCurso) {
+    filtroCurso.addEventListener("change", renderizarEventos);
+  }
 
   // Busca por texto (debounce leve)
   if (buscaTexto) {
@@ -317,7 +391,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.getElementById("local").value = evento.local;
     document.getElementById("publico").value = evento.publico || "";
-    document.getElementById("curso").value = evento.curso || "";
+    document.getElementById("curso").value = sanitizeCurso(evento.curso || "");
     document.getElementById("descricao").value = evento.descricao || "";
 
     editando = index;

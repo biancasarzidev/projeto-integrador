@@ -1,10 +1,12 @@
 // 📦 Versão do cache (mude a cada deploy para forçar atualização)
-const APP_VERSION = "v4"; 
+const APP_VERSION = "v5-2025-08-21";
 
 // Prefixos e nomes dos caches
 const CACHE_PREFIX = "uninga-cache";
 const CACHE_STATIC = `${CACHE_PREFIX}-static-${APP_VERSION}`;
 const CACHE_CDN = `${CACHE_PREFIX}-cdn-${APP_VERSION}`;
+
+const OFFLINE_URL = "offline.html";
 
 // Arquivos essenciais para funcionar offline (seu app)
 const ASSETS = [
@@ -12,6 +14,7 @@ const ASSETS = [
   "style.css",
   "script.js",
   "manifest.json",
+  OFFLINE_URL,
   // imagens do app
   "imagens/fachada.png",
   "imagens/favicon.jfif",
@@ -32,18 +35,21 @@ self.addEventListener("install", (event) => {
   self.skipWaiting();
 });
 
-// 🧹 Ativação: remove caches antigos
+// 🛰️ Ativação: limpa caches antigos e ativa Navigation Preload
 self.addEventListener("activate", (event) => {
-  event.waitUntil(
-    caches.keys().then((keys) =>
-      Promise.all(
-        keys
-          .filter((k) => k.startsWith(CACHE_PREFIX) && ![CACHE_STATIC, CACHE_CDN].includes(k))
-          .map((k) => caches.delete(k))
-      )
-    )
-  );
-  self.clients.claim();
+  event.waitUntil((async () => {
+    // Navigation Preload (quando disponível)
+    if ("navigationPreload" in self.registration) {
+      try { await self.registration.navigationPreload.enable(); } catch {}
+    }
+    const keys = await caches.keys();
+    await Promise.all(
+      keys
+        .filter((k) => k.startsWith(CACHE_PREFIX) && ![CACHE_STATIC, CACHE_CDN].includes(k))
+        .map((k) => caches.delete(k))
+    );
+    await self.clients.claim();
+  })());
 });
 
 // 🔄 Util: checa mesma origem
@@ -53,7 +59,7 @@ const sameOrigin = (requestUrl) => {
 };
 
 // 🛰️ Estratégias:
-// - Navegação (HTML): network-first (cai para cache se offline)
+// - Navegação (HTML): network-first (usa navigation preload quando tem) -> cache -> offline.html
 // - Estáticos do mesmo domínio (css/js/imagens/json): cache-first
 // - CDNs/terceiros: stale-while-revalidate (usa cache e atualiza em segundo plano)
 self.addEventListener("fetch", (event) => {
@@ -66,32 +72,39 @@ self.addEventListener("fetch", (event) => {
 
   // 1) Requests de navegação (HTML / SPA)
   if (request.mode === "navigate") {
-    event.respondWith(
-      fetch(request)
-        .then((resp) => {
-          // cacheia versão boa do index para fallback posterior
-          const copy = resp.clone();
-          caches.open(CACHE_STATIC).then((c) => c.put("index.html", copy));
-          return resp;
-        })
-        .catch(async () => {
-          // offline: tenta o index em cache
-          const cachedIndex = await caches.match("index.html");
-          if (cachedIndex) return cachedIndex;
+    event.respondWith((async () => {
+      try {
+        // Tenta usar a resposta de preload (mais rápida)
+        const preload = await event.preloadResponse;
+        if (preload) {
+          // Atualiza cache do index em background para fallback futuro
+          caches.open(CACHE_STATIC).then((c) => c.put("index.html", preload.clone()));
+          return preload;
+        }
 
-          // fallback mínimo inline (se ainda não tiver nada no cache)
-          return new Response(
-            "<h1>Offline</h1><p>Você está sem conexão e ainda não há cache disponível.</p>",
-            { headers: { "Content-Type": "text/html; charset=utf-8" }, status: 503 }
-          );
-        })
-    );
+        // Vai à rede
+        const network = await fetch(request);
+        // Cacheia versão boa do index para fallback posterior
+        caches.open(CACHE_STATIC).then((c) => c.put("index.html", network.clone()));
+        return network;
+      } catch (err) {
+        // offline: tenta o index em cache
+        const cachedIndex = await caches.match("index.html", { ignoreSearch: true });
+        if (cachedIndex) return cachedIndex;
+        // fallback para offline.html
+        const offline = await caches.match(OFFLINE_URL, { ignoreSearch: true });
+        return offline || new Response(
+          "<h1>Offline</h1><p>Sem conexão e sem cache disponível.</p>",
+          { headers: { "Content-Type": "text/html; charset=utf-8" }, status: 503 }
+        );
+      }
+    })());
     return;
   }
 
   // 2) Mesma origem (arquivos estáticos)
   if (sameOrigin(request.url)) {
-    const isStatic = /\.(?:js|css|png|jpg|jpeg|svg|gif|webp|ico|json)$/i.test(url.pathname);
+    const isStatic = /\.(?:js|mjs|css|png|jpg|jpeg|svg|gif|webp|ico|json|woff2?|ttf|eot)$/i.test(url.pathname);
     if (isStatic) {
       // cache-first
       event.respondWith(
@@ -100,13 +113,13 @@ self.addEventListener("fetch", (event) => {
           return fetch(request)
             .then((resp) => {
               // só cacheia respostas válidas
-              if (resp.ok && resp.type === "basic") {
+              if (resp.ok && (resp.type === "basic" || resp.type === "cors")) {
                 const copy = resp.clone();
                 caches.open(CACHE_STATIC).then((c) => c.put(request, copy));
               }
               return resp;
             })
-            .catch(() => cached); // se der erro de rede, tenta cache (se existir)
+            .catch(() => cached || new Response("", { status: 504 }));
         })
       );
       return;
@@ -116,7 +129,7 @@ self.addEventListener("fetch", (event) => {
     event.respondWith(
       fetch(request)
         .then((resp) => resp)
-        .catch(() => caches.match(request))
+        .catch(() => caches.match(request, { ignoreSearch: true }))
     );
     return;
   }
@@ -126,7 +139,7 @@ self.addEventListener("fetch", (event) => {
     caches.match(request).then((cached) => {
       const fetchPromise = fetch(request)
         .then((resp) => {
-          if (resp.ok) {
+          if (resp && (resp.ok || resp.type === "opaque")) {
             const copy = resp.clone();
             caches.open(CACHE_CDN).then((c) => c.put(request, copy));
           }
@@ -142,7 +155,5 @@ self.addEventListener("fetch", (event) => {
 
 // Mensagem opcional para permitir "atualizar agora" (skipWaiting)
 self.addEventListener("message", (event) => {
-  if (event.data === "SKIP_WAITING") {
-    self.skipWaiting();
-  }
+  if (event.data === "SKIP_WAITING") self.skipWaiting();
 });

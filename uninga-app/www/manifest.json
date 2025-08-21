@@ -1,14 +1,33 @@
 {
+  "id": "/",
   "name": "Agendamento de Eventos - Uningá",
   "short_name": "Eventos Uningá",
-  "start_url": "./",
+  "description": "App de agendamento e gestão de eventos da Uningá, com cadastro, filtros e funcionamento offline.",
+  "start_url": "./?source=pwa",
   "scope": "./",
   "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
   "background_color": "#4f46e5",
   "theme_color": "#4f46e5",
+  "orientation": "portrait-primary",
   "icons": [
     { "src": "imagens/icon-192.png", "sizes": "192x192", "type": "image/png" },
     { "src": "imagens/icon-512.png", "sizes": "512x512", "type": "image/png" },
     { "src": "imagens/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
-  ]
+  ],
+  "shortcuts": [
+    {
+      "name": "Cadastrar evento",
+      "short_name": "Cadastrar",
+      "description": "Ir direto ao formulário de cadastro",
+      "url": "./#formEvento"
+    },
+    {
+      "name": "Eventos cadastrados",
+      "short_name": "Eventos",
+      "description": "Abrir a lista de eventos",
+      "url": "./#listaEventos"
+    }
+  ],
+  "prefer_related_applications": false
 }

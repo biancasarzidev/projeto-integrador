@@ -105,12 +105,9 @@
 
           <div>
             <label for="curso" class="block text-sm font-medium text-gray-700">Curso</label>
-            <select id="curso" name="curso"
+            <select id="curso" name="curso" required
               class="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-400">
-              <option value="Sistemas para Internet">Sistemas para Internet</option>
-              <option value="Análise e Desenvolvimento de Sistemas">Análise e Desenvolvimento de Sistemas (ADS)</option>
-              <option value="Engenharia da Computação">Engenharia da Computação</option>
-              <option value="Direito">Direito</option>
+              <!-- opções preenchidas via JS -->
             </select>
           </div>
 
@@ -148,11 +145,7 @@
             <div>
               <label for="filtroCurso" class="block mb-1 text-sm font-semibold text-gray-700">Filtrar por curso</label>
               <select id="filtroCurso" class="p-2 border rounded">
-                <option value="">Todos</option>
-                <option value="Sistemas para Internet">Sistemas para Internet</option>
-                <option value="Análise e Desenvolvimento de Sistemas">ADS</option>
-                <option value="Engenharia da Computação">Engenharia da Computação</option>
-                <option value="Direito">Direito</option>
+                <!-- "Todos" e as demais opções serão inseridas via JS -->
               </select>
             </div>
             <div>
