@@ -1,70 +1,90 @@
 <!DOCTYPE html>
-<label for="publico" class="block text-sm font-medium text-gray-700">Público-alvo <span class="text-gray-400">(opcional)</span></label>
-<input
-type="text" id="publico" name="publico"
-placeholder="Acadêmicos de TI, docentes, comunidade"
-class="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-400"
->
-</div>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Agendamento de Eventos - Uningá</title>
 
+  <!-- Tailwind CSS via CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
 
-<div class="md:col-span-2">
-<label for="descricao" class="block text-sm font-medium text-gray-700">Descrição <span class="text-gray-400">(opcional)</span></label>
-<textarea
-id="descricao" name="descricao"
-placeholder="Resumo do evento e objetivos"
-rows="4"
-class="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-400"
-></textarea>
-</div>
+  <!-- Seu CSS customizado -->
+  <link rel="stylesheet" href="style.css" />
 
+  <!-- Ícone da aba -->
+  <link rel="icon" type="image/png" href="imagens/favicon.jfif" />
+</head>
+<body class="bg-gradient-to-br from-indigo-100 to-purple-200 text-gray-800 font-sans">
 
-<div class="md:col-span-2 flex items-center justify-end gap-3">
-<button type="reset" class="px-4 py-2 rounded border hover:bg-gray-50">Limpar</button>
-<button type="submit" class="px-5 py-2 rounded bg-indigo-600 text-white hover:bg-indigo-700">Cadastrar</button>
-</div>
-</form>
-</section>
+  <!-- 🔒 Sistema (trecho que você colou) -->
+  <main class="container mx-auto px-4 py-10 grid gap-12">
 
+    <!-- Seção de Cadastro -->
+    <section class="form-section">
+      <form id="formEvento" class="form-grid grid gap-4 md:grid-cols-2" novalidate>
 
-<!-- Seção de Lista -->
-<section class="list-section">
-<div class="flex items-end justify-between flex-wrap gap-4 mb-4">
-<h2 class="section-title text-2xl font-bold text-purple-700">Eventos Cadastrados</h2>
-<div class="flex gap-3 flex-wrap">
-<div>
-<label for="filtroCurso" class="block mb-1 text-sm font-semibold text-gray-700">Filtrar por curso</label>
-<select id="filtroCurso" class="p-2 border rounded">
-<!-- "Todos" e as demais opções serão inseridas via JS -->
-</select>
-</div>
-<div>
-<label for="buscaTexto" class="block mb-1 text-sm font-semibold text-gray-700">Buscar</label>
-<input id="buscaTexto" type="search" placeholder="Título ou local..." class="p-2 border rounded">
-</div>
-</div>
-</div>
+        <div>
+          <label for="publico" class="block text-sm font-medium text-gray-700">
+            Público-alvo <span class="text-gray-400">(opcional)</span>
+          </label>
+          <input
+            type="text" id="publico" name="publico"
+            placeholder="Acadêmicos de TI, docentes, comunidade"
+            class="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-400"
+          >
+        </div>
 
+        <div class="md:col-span-2">
+          <label for="descricao" class="block text-sm font-medium text-gray-700">
+            Descrição <span class="text-gray-400">(opcional)</span>
+          </label>
+          <textarea
+            id="descricao" name="descricao"
+            placeholder="Resumo do evento e objetivos"
+            rows="4"
+            class="w-full p-3 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-400"
+          ></textarea>
+        </div>
 
-<ul id="listaEventos" class="space-y-6" aria-live="polite" aria-busy="false">
-<!-- Cards de eventos renderizados via JS -->
-</ul>
+        <div class="md:col-span-2 flex items-center justify-end gap-3">
+          <button type="reset" class="px-4 py-2 rounded border hover:bg-gray-50">Limpar</button>
+          <button type="submit" class="px-5 py-2 rounded bg-indigo-600 text-white hover:bg-indigo-700">Cadastrar</button>
+        </div>
+      </form>
+    </section>
 
+    <!-- Seção de Lista -->
+    <section class="list-section">
+      <div class="flex items-end justify-between flex-wrap gap-4 mb-4">
+        <h2 class="section-title text-2xl font-bold text-purple-700">Eventos Cadastrados</h2>
+        <div class="flex gap-3 flex-wrap">
+          <div>
+            <label for="filtroCurso" class="block mb-1 text-sm font-semibold text-gray-700">Filtrar por curso</label>
+            <select id="filtroCurso" class="p-2 border rounded">
+              <!-- "Todos" e as demais opções serão inseridas via JS -->
+            </select>
+          </div>
+          <div>
+            <label for="buscaTexto" class="block mb-1 text-sm font-semibold text-gray-700">Buscar</label>
+            <input id="buscaTexto" type="search" placeholder="Título ou local..." class="p-2 border rounded">
+          </div>
+        </div>
+      </div>
 
-<p id="estadoVazio" class="text-sm text-gray-500 mt-4 hidden">Nenhum evento cadastrado ainda.</p>
-</section>
-</main>
-</div>
+      <ul id="listaEventos" class="space-y-6" aria-live="polite" aria-busy="false">
+        <!-- Cards de eventos renderizados via JS -->
+      </ul>
 
+      <p id="estadoVazio" class="text-sm text-gray-500 mt-4 hidden">Nenhum evento cadastrado ainda.</p>
+    </section>
+  </main>
 
-<!-- Scripts -->
-<!-- cache-busting aplicado no JS -->
-<script src="script.js?v=v6-2025-09-03a"></script>
-<script>
-// registra o service worker (PWA)
-if ('serviceWorker' in navigator) {
-navigator.serviceWorker.register('sw.js');
-}
-</script>
+  <!-- Scripts -->
+  <script src="script.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js');
+    }
+  </script>
 </body>
 </html>
